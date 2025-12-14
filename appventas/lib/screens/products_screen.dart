@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../data/local_data.dart';
 import '../models/product.dart';
@@ -34,14 +33,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 final p = LocalData.products[i];
                 return Card(
                   child: ListTile(
-                    leading: p.imagePath != null
-    ? Image.file(
-        File(p.imagePath!), // ✅ forzamos solo cuando no es null
-        width: 50,
-        height: 50,
-        fit: BoxFit.cover,
-      )
-    : const Icon(Icons.image),
+                    leading: Image.asset(
+                      p.imagePath,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
                     title: Text(p.name),
                     subtitle: Text('\$${p.price}'),
                     trailing: Row(
@@ -53,7 +50,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => AddEditProductScreen(product: p),
+                                builder: (_) =>
+                                    AddEditProductScreen(product: p),
                               ),
                             );
                             setState(() {});
@@ -74,4 +72,5 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 }
+
 
