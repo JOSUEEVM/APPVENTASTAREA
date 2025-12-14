@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/local_data.dart';
-import 'checkout_screen.dart';
+import '../screens/order_screen.dart';
 
 class ClientsScreen extends StatelessWidget {
   const ClientsScreen({super.key});
@@ -9,27 +8,50 @@ class ClientsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Comprar productos')),
-      body: ListView.builder(
-        itemCount: LocalData.products.length,
-        itemBuilder: (_, i) {
-          final p = LocalData.products[i];
-          return ListTile(
-            title: Text(p.name),
-            subtitle: Text('\$${p.price}'),
-            trailing: ElevatedButton(
-              child: const Text('Comprar'),
-              onPressed: () {
+      body: ListView(
+        padding: const EdgeInsets.all(12),
+        children: [
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.shopping_bag),
+              title: const Text('Laptop'),
+              subtitle: const Text('\$12000'),
+              trailing: const Icon(Icons.arrow_forward),
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => CheckoutScreen(product: p),
+                    builder: (_) => const OrderScreen(
+                      productName: 'Laptop',
+                      price: 12000,
+                    ),
                   ),
                 );
               },
             ),
-          );
-        },
+          ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.shopping_bag),
+              title: const Text('Mouse'),
+              subtitle: const Text('\$350'),
+              trailing: const Icon(Icons.arrow_forward),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const OrderScreen(
+                      productName: 'Mouse',
+                      price: 350,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+

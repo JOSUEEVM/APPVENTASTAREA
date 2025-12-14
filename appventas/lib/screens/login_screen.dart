@@ -14,11 +14,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final passCtrl = TextEditingController();
 
   void login() {
-    final user = LocalData.users.where(
-      (u) =>
-          u.email == emailCtrl.text &&
-          u.password == passCtrl.text,
-    );
+    final user = LocalData.users.where((u) =>
+        u.email == emailCtrl.text &&
+        u.password == passCtrl.text);
 
     if (user.isNotEmpty) {
       Navigator.pushReplacement(
@@ -35,25 +33,28 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Iniciar sesión')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Icon(Icons.store, size: 90, color: Colors.blue),
+            const SizedBox(height: 20),
             TextField(
               controller: emailCtrl,
               decoration: const InputDecoration(labelText: 'Correo'),
             ),
+            const SizedBox(height: 12),
             TextField(
               controller: passCtrl,
               decoration: const InputDecoration(labelText: 'Contraseña'),
               obscureText: true,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: login,
               child: const Text('Entrar'),
-            ),
+            )
           ],
         ),
       ),
