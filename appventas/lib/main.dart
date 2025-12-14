@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart';
-
+import 'screens/login_screen.dart';
 
 void main() {
-runApp(const SalesApp());
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: LoginScreen(),
+    );
+  }
 }
 
 
-class SalesApp extends StatelessWidget {
-const SalesApp({super.key});
-
-
-@override
-Widget build(BuildContext context) {
-return MaterialApp(
-debugShowCheckedModeBanner: false,
-title: 'App de Ventas',
-theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
-home: const HomeScreen(),
-);
-}
-}
