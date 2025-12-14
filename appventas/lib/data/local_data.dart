@@ -1,12 +1,13 @@
 import '../models/user.dart';
 import '../models/product.dart';
-import '../models/client.dart';
 
 class LocalData {
+  /// Usuarios locales (login)
   static List<User> users = [
-    User(email: 'admin@local.com', password: '123456'),
+    User(email: 'admin@gmail.com', password: '1234'),
   ];
 
+  /// Productos creados
   static List<Product> products = [];
-  static List<Client> clients = [];
 }
+

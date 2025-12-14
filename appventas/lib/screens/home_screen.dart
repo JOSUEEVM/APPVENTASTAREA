@@ -12,9 +12,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
 
-  final screens = [
-    const ProductsScreen(),
-    const ClientsScreen(),
+  final screens = const [
+    ProductsScreen(),
+    ClientsScreen(),
   ];
 
   @override
@@ -26,15 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (i) => setState(() => index = i),
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.inventory), label: 'Productos'),
+            icon: Icon(Icons.store),
+            label: 'Productos',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.people), label: 'Clientes'),
+            icon: Icon(Icons.shopping_cart),
+            label: 'Clientes',
+          ),
         ],
       ),
     );
   }
 }
-
-
-
-// ---------------- MODELO ----------------

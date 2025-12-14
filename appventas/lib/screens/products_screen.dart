@@ -1,6 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../data/local_data.dart';
-import '../models/product.dart';
+import 'add_product_screen.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -10,40 +11,32 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  void addProduct() {
-    setState(() {
-      LocalData.products.add(
-        Product(name: 'Nuevo producto', price: 0),
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Productos')),
       floatingActionButton: FloatingActionButton(
-        onPressed: addProduct,
         child: const Icon(Icons.add),
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddProductScreen()),
+          );
+          setState(() {});
+        },
       ),
       body: ListView.builder(
         itemCount: LocalData.products.length,
         itemBuilder: (_, i) {
           final p = LocalData.products[i];
           return ListTile(
+            leading: Image.file(File(p.imagePath), width: 50),
             title: Text(p.name),
             subtitle: Text('\$${p.price}'),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  LocalData.products.removeAt(i);
-                });
-              },
-            ),
           );
         },
       ),
     );
   }
 }
+

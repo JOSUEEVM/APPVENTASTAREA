@@ -1,6 +1,11 @@
 class Product {
-  String name;
-  double price;
+  final String name;
+  final double price;
+  final String imagePath;
 
-  Product({required this.name, required this.price});
+  Product({
+    required this.name,
+    required this.price,
+    required this.imagePath,
+  });
 }

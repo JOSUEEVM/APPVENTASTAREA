@@ -1,54 +1,35 @@
 import 'package:flutter/material.dart';
+import '../data/local_data.dart';
+import 'checkout_screen.dart';
 
+class ClientsScreen extends StatelessWidget {
+  const ClientsScreen({super.key});
 
-class ClientsScreen extends StatefulWidget {
-const ClientsScreen({super.key});
-
-
-@override
-State<ClientsScreen> createState() => _ClientsScreenState();
-}
-
-
-class _ClientsScreenState extends State<ClientsScreen> {
-final List<String> clients = [];
-
-
-void addClient() {
-final ctrl = TextEditingController();
-showDialog(
-context: context,
-builder: (_) => AlertDialog(
-title: const Text('Nuevo Cliente'),
-content: TextField(controller: ctrl, decoration: const InputDecoration(labelText: 'Nombre')),
-actions: [
-ElevatedButton(
-onPressed: () {
-setState(() => clients.add(ctrl.text));
-Navigator.pop(context);
-},
-child: const Text('Guardar'),
-)
-],
-),
-);
-}
-
-
-@override
-Widget build(BuildContext context) {
-return Scaffold(
-floatingActionButton: FloatingActionButton(onPressed: addClient, child: const Icon(Icons.add)),
-body: ListView.builder(
-itemCount: clients.length,
-itemBuilder: (_, i) => ListTile(
-title: Text(clients[i]),
-trailing: IconButton(
-icon: const Icon(Icons.delete),
-onPressed: () => setState(() => clients.removeAt(i)),
-),
-),
-),
-);
-}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Comprar productos')),
+      body: ListView.builder(
+        itemCount: LocalData.products.length,
+        itemBuilder: (_, i) {
+          final p = LocalData.products[i];
+          return ListTile(
+            title: Text(p.name),
+            subtitle: Text('\$${p.price}'),
+            trailing: ElevatedButton(
+              child: const Text('Comprar'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CheckoutScreen(product: p),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
