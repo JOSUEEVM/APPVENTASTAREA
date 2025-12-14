@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final screens = [
     const ProductsScreen(),
-    const ClientsScreen(),
+    const ClientScreen(),
     const SalesScreen(),
   ];
 

@@ -34,12 +34,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 final p = LocalData.products[i];
                 return Card(
                   child: ListTile(
-                    leading: Image.file(
-                      File(p.imagePath),
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
+                    leading: p.imagePath != null
+    ? Image.file(
+        File(p.imagePath!), // ✅ forzamos solo cuando no es null
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
+      )
+    : const Icon(Icons.image),
                     title: Text(p.name),
                     subtitle: Text('\$${p.price}'),
                     trailing: Row(
