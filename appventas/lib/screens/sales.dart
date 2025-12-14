@@ -8,7 +8,7 @@ const SalesScreen({super.key});
 @override
 Widget build(BuildContext context) {
 return const Center(
-child: Text('Módulo de Ventas (pendiente de lógica)', style: TextStyle(fontSize: 18)),
+child: Text('Módulo de Ventas (Hola de lógica)', style: TextStyle(fontSize: 18)),
 );
 }
 }
