@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../data/local_data.dart';
-import '../models/product.dart';
 import '../widgets/product_image.dart';
 import 'add_edit_product_screen.dart';
 
