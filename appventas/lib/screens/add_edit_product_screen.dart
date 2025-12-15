@@ -28,33 +28,33 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
   }
 
   void saveProduct() {
-    if (nameCtrl.text.isEmpty ||
-        priceCtrl.text.isEmpty ||
-        image == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa todos los campos')),
-      );
-      return;
-    }
+  final price = double.tryParse(priceCtrl.text);
 
-    final product = Product(
-      name: nameCtrl.text,
-      price: double.parse(priceCtrl.text),
-      imagePath: image!.path,
+  if (nameCtrl.text.isEmpty || price == null || image == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Completa todos los campos correctamente')),
     );
-
-    if (widget.product == null) {
-      // ➕ NUEVO
-      LocalData.products.add(product);
-    } else {
-      // ✏️ EDITAR
-      widget.product!.name = product.name;
-      widget.product!.price = product.price;
-      widget.product!.imagePath = product.imagePath;
-    }
-
-    Navigator.pop(context);
+    return;
   }
+
+  if (widget.product == null) {
+    LocalData.products.add(
+      Product(
+        name: nameCtrl.text,
+        price: price,
+        imagePath: image!.path,
+      ),
+    );
+  } else {
+    widget.product!.name = nameCtrl.text;
+    widget.product!.price = price;
+    widget.product!.imagePath = image!.path;
+  }
+
+  FocusScope.of(context).unfocus(); // 👈 evita crash del teclado
+  Navigator.pop(context);
+}
+
 
   Future pickImage() async {
     final picked = await ImagePicker().pickImage(

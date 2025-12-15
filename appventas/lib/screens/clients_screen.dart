@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/local_data.dart';
 import '../models/cart_item.dart';
 import 'order_screen.dart';
+import '../widgets/product_image.dart';
 
 class ClientScreen extends StatefulWidget {
   const ClientScreen({super.key});
@@ -55,9 +56,7 @@ class _ClientScreenState extends State<ClientScreen> {
           return Card(
             margin: const EdgeInsets.all(8),
             child: ListTile(
-              leading: p.imagePath != null
-                  ? Image.asset(p.imagePath!, width: 50)
-                  : const Icon(Icons.image),
+              leading: productImage(p.imagePath),
               title: Text(p.name),
               subtitle: Text('\$${p.price.toStringAsFixed(2)}'),
               trailing: IconButton(

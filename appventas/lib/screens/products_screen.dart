@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/local_data.dart';
 import '../models/product.dart';
+import '../widgets/product_image.dart';
 import 'add_edit_product_screen.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -33,12 +34,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 final p = LocalData.products[i];
                 return Card(
                   child: ListTile(
-                    leading: Image.asset(
-                      p.imagePath,
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
+                    leading: productImage(p.imagePath),
                     title: Text(p.name),
                     subtitle: Text('\$${p.price}'),
                     trailing: Row(
