@@ -20,58 +20,93 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.product != null) {
+    if (widget.product != null && widget.product!.imagePath != null) {
       nameCtrl.text = widget.product!.name;
       priceCtrl.text = widget.product!.price.toString();
-      image = File(widget.product!.imagePath);
+      image = File(widget.product!.imagePath!);
     }
   }
 
-  void saveProduct() {
-  final price = double.tryParse(priceCtrl.text);
-
-  if (nameCtrl.text.isEmpty || price == null || image == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Completa todos los campos correctamente')),
-    );
-    return;
-  }
-
-  if (widget.product == null) {
-    LocalData.products.add(
-      Product(
-        name: nameCtrl.text,
-        price: price,
-        imagePath: image!.path,
+  // 📷🖼️ Mostrar opciones
+  void showImageSource() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Colors.blue),
+              title: const Text('Tomar foto'),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo, color: Colors.green),
+              title: const Text('Elegir de galería'),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
       ),
     );
-  } else {
-    widget.product!.name = nameCtrl.text;
-    widget.product!.price = price;
-    widget.product!.imagePath = image!.path;
   }
 
-  FocusScope.of(context).unfocus(); // 👈 evita crash del teclado
-  Navigator.pop(context);
-}
-
-
-  Future pickImage() async {
+  Future<void> pickImage(ImageSource source) async {
     final picked = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
+      source: source,
+      imageQuality: 75, // 🔥 reduce peso
     );
     if (picked != null) {
       setState(() => image = File(picked.path));
     }
   }
 
+  void saveProduct() {
+    final price = double.tryParse(priceCtrl.text);
+
+    if (nameCtrl.text.isEmpty || price == null || image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completa todos los campos')),
+      );
+      return;
+    }
+
+    if (widget.product == null) {
+      LocalData.products.add(
+        Product(
+          name: nameCtrl.text,
+          price: price,
+          imagePath: image!.path,
+        ),
+      );
+    } else {
+      widget.product!
+        ..name = nameCtrl.text
+        ..price = price
+        ..imagePath = image!.path;
+    }
+
+    FocusScope.of(context).unfocus();
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.product == null
-            ? 'Agregar producto'
-            : 'Editar producto'),
+        title: Text(
+          widget.product == null ? 'Agregar producto' : 'Editar producto',
+        ),
+        backgroundColor: const Color(0xFF1976D2),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -86,21 +121,47 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
               decoration: const InputDecoration(labelText: 'Precio'),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
+
+            // 📷🖼️ BOTÓN MEJORADO
             ElevatedButton.icon(
-              onPressed: pickImage,
+              onPressed: showImageSource,
               icon: const Icon(Icons.image),
               label: const Text('Seleccionar imagen'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+              ),
             ),
+
             if (image != null)
               Padding(
-                padding: const EdgeInsets.all(8),
-                child: Image.file(image!, height: 120),
+                padding: const EdgeInsets.all(12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    image!,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
+
             const Spacer(),
-            ElevatedButton(
-              onPressed: saveProduct,
-              child: const Text('Guardar producto'),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: saveProduct,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text(
+                  'Guardar producto',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             ),
           ],
         ),
