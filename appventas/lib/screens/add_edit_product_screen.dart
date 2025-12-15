@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../data/local_data.dart';
 import '../models/product.dart';
 
 class AddEditProductScreen extends StatefulWidget {
   final Product? product;
-
   const AddEditProductScreen({super.key, this.product});
 
   @override
@@ -20,20 +20,46 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
   @override
   void initState() {
     super.initState();
-
     if (widget.product != null) {
       nameCtrl.text = widget.product!.name;
       priceCtrl.text = widget.product!.price.toString();
-
-      // ✅ VALIDAR QUE imagePath NO SEA NULL
-      if (widget.product!.imagePath != null) {
-        image = File(widget.product!.imagePath!);
-      }
+      image = File(widget.product!.imagePath);
     }
   }
 
-  Future<void> pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+  void saveProduct() {
+    if (nameCtrl.text.isEmpty ||
+        priceCtrl.text.isEmpty ||
+        image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completa todos los campos')),
+      );
+      return;
+    }
+
+    final product = Product(
+      name: nameCtrl.text,
+      price: double.parse(priceCtrl.text),
+      imagePath: image!.path,
+    );
+
+    if (widget.product == null) {
+      // ➕ NUEVO
+      LocalData.products.add(product);
+    } else {
+      // ✏️ EDITAR
+      widget.product!.name = product.name;
+      widget.product!.price = product.price;
+      widget.product!.imagePath = product.imagePath;
+    }
+
+    Navigator.pop(context);
+  }
+
+  Future pickImage() async {
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (picked != null) {
       setState(() => image = File(picked.path));
     }
@@ -43,8 +69,9 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.product == null ? 'Agregar producto' : 'Editar producto'),
-        backgroundColor: const Color(0xFF1976D2),
+        title: Text(widget.product == null
+            ? 'Agregar producto'
+            : 'Editar producto'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -56,24 +83,24 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
             ),
             TextField(
               controller: priceCtrl,
-              keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Precio'),
+              keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 12),
-
-            GestureDetector(
-              onTap: pickImage,
-              child: Container(
-                height: 120,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: image != null
-                    ? Image.file(image!, fit: BoxFit.cover)
-                    : const Center(child: Text('Agregar imagen')),
+            const SizedBox(height: 10),
+            ElevatedButton.icon(
+              onPressed: pickImage,
+              icon: const Icon(Icons.image),
+              label: const Text('Seleccionar imagen'),
+            ),
+            if (image != null)
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.file(image!, height: 120),
               ),
+            const Spacer(),
+            ElevatedButton(
+              onPressed: saveProduct,
+              child: const Text('Guardar producto'),
             ),
           ],
         ),
@@ -81,5 +108,6 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
     );
   }
 }
+
 
 
